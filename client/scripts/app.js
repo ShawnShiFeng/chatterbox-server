@@ -42,7 +42,7 @@ var app = {
     $.ajax({
       url: app.server,
       type: 'POST',
-      data: message,
+      data: JSON.stringify(message), // changed
       success: function (data) {
         // Clear messages input
         app.$message.val('');
@@ -61,30 +61,28 @@ var app = {
       url: app.server,
       type: 'GET',
       // data: { order: '-createdAt' },
-      // contentType: 'application/json',
-      contentType: 'text/plain',
+      contentType: 'application/json',
       success: function(data) {
         // Don't bother if we have nothing to work with
         // debugger;
         if (!data.results || !data.results.length) { return; }
-
+        // console.log("1");
         // Store messages for caching later
         app.messages = data.results;
 
         // Get the last message
         var mostRecentMessage = data.results[data.results.length - 1];
-
         // Only bother updating the DOM if we have a new message
-        if (mostRecentMessage.objectId !== app.lastMessageId) {
+        // if (mostRecentMessage.objectId !== app.lastMessageId) {
           // Update the UI with the fetched rooms
-          app.renderRoomList(data.results);
+        app.renderRoomList(data.results);
 
           // Update the UI with the fetched messages
-          app.renderMessages(data.results, animate);
+        app.renderMessages(data.results, animate);
 
           // Store the ID of the most recent message
-          app.lastMessageId = mostRecentMessage.objectId;
-        }
+        app.lastMessageId = mostRecentMessage.objectId;
+        // }
       },
       error: function(error) {
         console.error('chatterbox: Failed to fetch messages', error);
@@ -228,7 +226,7 @@ var app = {
 
   startSpinner: function() {
     $('.spinner img').show();
-    $('form input[type=submit]').attr('disabled', 'false');//changed
+    $('form input[type=submit]').attr('disabled', 'true');
   },
 
   stopSpinner: function() {
