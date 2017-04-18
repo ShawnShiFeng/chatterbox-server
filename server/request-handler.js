@@ -12,7 +12,7 @@ this file and include it in basic-server.js so that it actually works.
 
 **************************************************************/
 var easy = {
-  results:[]
+  results: []
 };
 
 var requestHandler = function(request, response) {
@@ -37,25 +37,31 @@ var requestHandler = function(request, response) {
   // The outgoing status.
 
   if (request.url !== '/classes/messages') {
-    statusCode = 404;
+    var statusCode = 404;
     response.writeHead(statusCode);
-  };
+  }
 
   if (request.method === 'GET' && request.url === '/classes/messages') {
     var statusCode = 200;
     response.end(JSON.stringify(easy));
-  };
+  }
 
   if (request.method === 'POST' && request.url === '/classes/messages') {
-    statusCode = 201;
+    var statusCode = 201;
     request.on('data', function(data) {
       var getData = JSON.parse(data);
       easy.results.push(getData);
     });
-  }; 
+  }
 
 
   // See the note below about CORS headers.
+  var defaultCorsHeaders = {
+    'access-control-allow-origin': '*',
+    'access-control-allow-methods': 'GET, POST, PUT, DELETE, OPTIONS',
+    'access-control-allow-headers': 'content-type, accept',
+    'access-control-max-age': 10 // Seconds.
+  };
   var headers = defaultCorsHeaders;
 
   // Tell the client we are sending them plain text.
@@ -78,8 +84,8 @@ var requestHandler = function(request, response) {
   // node to actually send all the data over to the client.
 
   var json = JSON.stringify(easy);
-    response.end(json);//
-  };
+  response.end(json);//
+};
 
 // These headers will allow Cross-Origin Resource Sharing (CORS).
 // This code allows this server to talk to websites that
@@ -90,12 +96,6 @@ var requestHandler = function(request, response) {
 //
 // Another way to get around this restriction is to serve you chat
 // client from this domain by setting up static file serving.
-var defaultCorsHeaders = {
-  'access-control-allow-origin': '*',
-  'access-control-allow-methods': 'GET, POST, PUT, DELETE, OPTIONS',
-  'access-control-allow-headers': 'content-type, accept',
-  'access-control-max-age': 10 // Seconds.
-};
 
 module.exports.requestHandler = requestHandler;
 
